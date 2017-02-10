@@ -1,33 +1,59 @@
 import 'dart:math';
 
 final Random rng = new Random();
-enum TreeState { empty, tree, burning }
+enum PlotState { empty, tree, burning }
+
+const String Empty = "rgb(0,10,0)";
+const String Tree = "rgb(0,255,0)";
+const String YellowFire = "rgb(255,120,0)";
+const String RedFire = "rgb(255,0,0)";
 
 class Plot {
 
-  int x, y;
-  Map Environment;
-  TreeState state = TreeState.empty;
-  TreeState nextState = TreeState.empty;
-  
-  bool isNewTree() => rng.nextInt(43) == 1;
-  bool isCatchingFire() => rng.nextInt(6000) == 1;
-
   Plot(this.x, this.y, this.Environment) {
     if (isNewTree()) {
-      state = TreeState.tree;
+      state = PlotState.tree;
     }
   }
 
-  void update() {
-    if (state == TreeState.burning)
-      nextState = TreeState.empty;
-    else if (state == TreeState.tree && isNeighbourBurning())
-      nextState = TreeState.burning;
-    else if (state == TreeState.tree && isCatchingFire())
-      nextState = TreeState.burning;
-    else if (state == TreeState.empty && isNewTree())
-      nextState = TreeState.tree;
+  int x, y;
+  Map<String, Plot> Environment;
+  int _treeChance = 2;
+  int _fireChance = 0;
+
+  PlotState state = PlotState.empty;
+  PlotState nextState = PlotState.empty;
+
+  get colour {
+    if (state == PlotState.empty) return Empty;
+    if (state == PlotState.tree) return Tree;
+
+    if (rng.nextInt(3) == 2)
+      return YellowFire;
+    else
+      return RedFire;
+  }
+
+  bool isNewTree() {
+    return rng.nextInt(_treeChance) == 1;
+  }
+
+  bool isCatchingFire() {
+    return rng.nextInt(_fireChance) == 1;
+  }
+
+  void update(int fireChance, int treeChance) {
+    _treeChance = treeChance;
+    _fireChance = fireChance;
+
+    if (state == PlotState.burning)
+      nextState = PlotState.empty;
+    else if (state == PlotState.tree && isNeighbourBurning())
+      nextState = PlotState.burning;
+    else if (state == PlotState.tree && isCatchingFire())
+      nextState = PlotState.burning;
+    else if (state == PlotState.empty && isNewTree())
+      nextState = PlotState.tree;
   }
 
   bool isNeighbourBurning() {
@@ -61,6 +87,6 @@ class Plot {
   bool isNeighbourOnFire(int nx, int ny) {
     Plot t = Environment["$nx-$ny"];
     if (t == null) return false;
-    return t.state == TreeState.burning;
+    return t.state == PlotState.burning;
   }
 }
