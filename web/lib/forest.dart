@@ -2,10 +2,9 @@ import 'dart:math';
 
 import 'plot.dart';
 
-
 class Forest {
   Map<String, Plot> plots = {};
-  int width = 50;
+  int width = 45;
   Random rng = new Random();
 
   Forest() {
@@ -21,4 +20,3 @@ class Forest {
     plots.forEach((k, c) => c.commit());
   }
 }
-

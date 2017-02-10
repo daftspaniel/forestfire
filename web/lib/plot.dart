@@ -1,5 +1,7 @@
-import 'common.dart';
+import 'dart:math';
 
+final Random rng = new Random();
+enum TreeState { empty, tree, burning }
 
 class Plot {
 
@@ -7,22 +9,14 @@ class Plot {
   Map Environment;
   TreeState state = TreeState.empty;
   TreeState nextState = TreeState.empty;
+  
+  bool isNewTree() => rng.nextInt(43) == 1;
+  bool isCatchingFire() => rng.nextInt(6000) == 1;
 
   Plot(this.x, this.y, this.Environment) {
-    if (isTree()) {
+    if (isNewTree()) {
       state = TreeState.tree;
     }
-  }
-
-  bool isTree() {
-    int tree = rng.nextInt(2);
-    return tree == 1;
-  }
-
-
-  bool isFire() {
-    int fire = rng.nextInt(10000);
-    return fire == 1;
   }
 
   void update() {
@@ -30,9 +24,9 @@ class Plot {
       nextState = TreeState.empty;
     else if (state == TreeState.tree && isNeighbourBurning())
       nextState = TreeState.burning;
-    else if (state == TreeState.tree && isFire())
+    else if (state == TreeState.tree && isCatchingFire())
       nextState = TreeState.burning;
-    else if (state == TreeState.empty && isTree())
+    else if (state == TreeState.empty && isNewTree())
       nextState = TreeState.tree;
   }
 
@@ -52,6 +46,9 @@ class Plot {
     if (isNeighbourOnFire(x + 1, y - 1)) n++;
 
     if (isNeighbourOnFire(x - 1, y)) n++;
+
+    if (n > 0) return n;
+
     if (isNeighbourOnFire(x + 1, y)) n++;
 
     if (isNeighbourOnFire(x - 1, y + 1)) n++;
