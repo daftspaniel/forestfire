@@ -18,17 +18,30 @@
 </head>
 
 <body>
-<h1>Forest Fire</h1>
+<div style="width: 500px; text-align: center">
 
-<canvas id="surface" width="360" height="360" style="border:2px solid;border-radius:5px;"></canvas>
+    <h1>Forest Fire</h1>
 
-<div style="display: table-cell">
+    <canvas id="surface" width="360" height="360" style="border:2px solid darkolivegreen;border-radius:5px;"></canvas>
 
-    <i> Fire Probability LESS</i> <input type="range" min="1" max="99" id="Fire" value="30"/> MORE
+    <div>
 
-    <br/>
+        <i> Fire Probability LESS</i> <input type="range" min="1" max="99" id="Fire" value="30"/> MORE
 
-    <i> Tree Probability LESS</i> <input type="range" min="1" max="99" id="Tree" value="43"/> MORE
+        <br/>
+        <br/>
+
+        <i> Tree Probability LESS</i> <input type="range" min="1" max="99" id="Tree" value="43"/> MORE
+
+        <br/>
+        <br/>
+
+        <button id="Start">START</button>
+        &nbsp;
+        <button id="Stop">STOP</button>
+        &nbsp;
+        <button id="Reset">RESET</button>
+    </div>
 </div>
 </body>
 </html>

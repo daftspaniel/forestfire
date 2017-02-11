@@ -7,30 +7,49 @@ import 'dart:html';
 
 import 'lib/forest.dart';
 
-const int width = 2;
+const int drawPlotWidth = 2;
 final CanvasElement ca = querySelector("#surface");
 final CanvasRenderingContext2D c2d = ca.getContext("2d");
 
-Forest trees = new Forest();
 final InputElement fireControl = querySelector('#Fire');
+final InputElement treeControl = querySelector('#Tree');
+final ButtonElement startButton = querySelector('#Start');
+final ButtonElement stopButton = querySelector('#Stop');
+final ButtonElement resetButton = querySelector('#Reset');
+
+final Forest trees = new Forest();
 
 void main() {
-  print(trees);
-  print(trees.width);
-  fireControl.onChange.listen((e) {
-    trees.fireChance = 100 - fireControl.valueAsNumber.toInt();
-    print(trees.fireChance);
-    print(trees.treeChance);
-  });
-
+  setupGuiEventHandlers();
 
   new Timer.periodic(new Duration(milliseconds: 1000), (timer) {
-    trees.update();
+    if (trees.active)
+      trees.update();
 
     for (int x = 0; x < trees.width; x++)
       for (int y = 0; y < trees.width; y++)
         c2d
           ..fillStyle = trees.plots["$x-$y"].colour
-          ..fillRect(x * width, y * width, width, width);
+          ..fillRect(x * drawPlotWidth, y * drawPlotWidth, drawPlotWidth, drawPlotWidth);
+  });
+}
+
+void setupGuiEventHandlers() {
+  fireControl.onChange.listen((e) {
+    trees.fireChance = 100 - fireControl.valueAsNumber.toInt();
+  });
+
+  treeControl.onChange.listen((e) {
+    trees.treeChance = 101 - treeControl.valueAsNumber.toInt();
+  });
+
+  startButton.onClick.listen((e) {
+    trees.active = true;
+  });
+  stopButton.onClick.listen((e) {
+    trees.active = false;
+  });
+  resetButton.onClick.listen((e) {
+    trees.reset();
   });
 }

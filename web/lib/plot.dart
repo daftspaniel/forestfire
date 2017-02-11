@@ -3,30 +3,31 @@ import 'dart:math';
 final Random rng = new Random();
 enum PlotState { empty, tree, burning }
 
-const String Empty = "rgb(0,10,0)";
+const String Empty = "rgb(68, 109, 42)";
 const String Tree = "rgb(0,255,0)";
 const String YellowFire = "rgb(255,120,0)";
 const String RedFire = "rgb(255,0,0)";
 
 class Plot {
 
-  Plot(this.x, this.y, this.Environment) {
-    if (isNewTree()) {
-      state = PlotState.tree;
-    }
-  }
-
-  int x, y;
-  Map<String, Plot> Environment;
-  int _treeChance = 2;
-  int _fireChance = 0;
+  final int x, y;
+  final Map<String, Plot> biome;
+  final Function getFireChance;
+  final Function getTreeChance;
 
   PlotState state = PlotState.empty;
   PlotState nextState = PlotState.empty;
 
+  Plot(this.x, this.y,
+      this.biome,
+      this.getTreeChance,
+      this.getFireChance) {
+    if (isNewTree()) state = PlotState.tree;
+  }
+
   get colour {
-    if (state == PlotState.empty) return Empty;
     if (state == PlotState.tree) return Tree;
+    if (state == PlotState.empty) return Empty;
 
     if (rng.nextInt(3) == 2)
       return YellowFire;
@@ -35,17 +36,14 @@ class Plot {
   }
 
   bool isNewTree() {
-    return rng.nextInt(_treeChance) == 1;
+    return rng.nextInt(getTreeChance()) == 1;
   }
 
   bool isCatchingFire() {
-    return rng.nextInt(_fireChance) == 1;
+    return rng.nextInt(getFireChance()) == 1;
   }
 
-  void update(int fireChance, int treeChance) {
-    _treeChance = treeChance;
-    _fireChance = fireChance;
-
+  void update() {
     if (state == PlotState.burning)
       nextState = PlotState.empty;
     else if (state == PlotState.tree && isNeighbourBurning())
@@ -85,7 +83,7 @@ class Plot {
   }
 
   bool isNeighbourOnFire(int nx, int ny) {
-    Plot t = Environment["$nx-$ny"];
+    Plot t = biome["$nx-$ny"];
     if (t == null) return false;
     return t.state == PlotState.burning;
   }

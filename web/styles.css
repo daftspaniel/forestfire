@@ -6,4 +6,12 @@ html, body {
     margin: 5px;
     padding: 0;
     font-family: 'Roboto', sans-serif;
+    background-color: darkseagreen;
+}
+
+button {
+    width: 150px;
+    height: 100px;
+    border-radius: 142px;
+    border: 0px;
 }

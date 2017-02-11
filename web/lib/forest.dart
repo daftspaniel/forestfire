@@ -3,9 +3,11 @@ import 'dart:math';
 import 'plot.dart';
 
 class Forest {
-  Map<String, Plot> plots = {};
-  int width = 180;
-  Random rng = new Random();
+  final Map<String, Plot> plots = {};
+  final int width = 180;
+  final Random rng = new Random();
+
+  bool _active = true;
   int _treeChance = 43;
   int _fireChance = 6000;
 
@@ -17,18 +19,25 @@ class Forest {
     _fireChance = val * 200;
   }
 
-  int get treeChance => _treeChance;
+  bool get active => _active;
+  set active(bool val) =>_active = val;
 
-  int get fireChance => _fireChance;
+  int getTreeChance() => _treeChance;
+
+  int getFireChance() => _fireChance;
 
   Forest() {
+    reset();
+  }
+
+  void reset() {
     for (int x = 0; x < width; x++)
       for (int y = 0; y < width; y++)
-        plots["$x-$y"] = new Plot(x, y, plots);
+        plots["$x-$y"] = new Plot(x, y, plots, getTreeChance, getFireChance);
   }
 
   void update() {
-    plots.forEach((k, c) => c.update(fireChance, treeChance));
+    plots.forEach((k, c) => c.update());
     plots.forEach((k, c) => c.commit());
   }
 }
