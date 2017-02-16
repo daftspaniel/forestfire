@@ -1,74 +1,69 @@
 import 'dart:math';
 
+import 'grid.dart';
+
 final Random rng = new Random();
-enum PlotState { empty, tree, burning, ash }
+enum PlotState { empty, tree, burning, embers }
 
 const String Empty = "rgb(68, 109, 42)";
 const String Tree = "rgb(0,255,0)";
 const String YellowFire = "rgb(255,120,0)";
 const String RedFire = "rgb(255,0,0)";
-const String Ash = "rgb(50,50,50)";
 
 class Plot {
 
-  final int x, y;
-  final Map<String, Plot> biome;
-  final Function getFireChance;
-  final Function getTreeChance;
+  int x, y;
+  Grid biome;
+  Function getFireChance;
+  Function getTreeChance;
 
   PlotState state = PlotState.empty;
   PlotState nextState = PlotState.empty;
   int treeAge = 0;
 
-  Plot(this.x, this.y,
-      this.biome,
-      this.getTreeChance,
-      this.getFireChance) {
+  Plot() {}
+
+  void init() {
     if (isNewTree()) {
       state = PlotState.tree;
-      treeAge = rng.nextInt(76);
+      treeAge = rng.nextInt(255);
     }
   }
 
   get colour {
-    if (state == PlotState.tree) return "rgb(0,${128 + min(treeAge, 127)},0)";
+    if (state == PlotState.tree) return "rgb(0,${110 + min(treeAge, 165)},0)";
     if (state == PlotState.empty) return Empty;
-    if (state == PlotState.ash) return Ash;
+    if (state == PlotState.embers) return YellowFire;
 
-    return "rgb(${55 + rng.nextInt(200)},${12 + rng.nextInt(123)},0)";
+    return "rgb(${155 + rng.nextInt(100)},${12 + rng.nextInt(123)},0)";
   }
 
-  bool isNewTree() {
-    return rng.nextInt(getTreeChance()) == 1;
-  }
+  bool isNewTree() => rng.nextInt(getTreeChance()) == 1;
 
-  bool isCatchingFire() {
-    return rng.nextInt(getFireChance()) == 1;
-  }
+  bool isCatchingFire() => treeAge > 20 && rng.nextInt(getFireChance()) == 1;
+
+  bool isCatchingFireFromNeighbour() =>
+      rng.nextInt(8) > 1 && getBurningNeighbourCount() > 0;
 
   void update() {
     if (state == PlotState.burning)
-      nextState = PlotState.ash;
-    else if (state == PlotState.ash)
+      nextState = PlotState.embers;
+    else if (state == PlotState.embers)
       nextState = PlotState.empty;
-    else if (state == PlotState.tree && rng.nextInt(8)>1 && isNeighbourBurning()) {
+    else if (state == PlotState.tree && isCatchingFireFromNeighbour()) {
       nextState = PlotState.burning;
       treeAge = 0;
     }
-    else if (state == PlotState.tree && treeAge > 40 && isCatchingFire()) {
+    else if (state == PlotState.tree && isCatchingFire()) {
       treeAge = 0;
       nextState = PlotState.burning;
     }
     else if (state == PlotState.empty && isNewTree()) {
-      treeAge++;
+      treeAge = 0;
       nextState = PlotState.tree;
     }
 
     if (state == PlotState.tree) treeAge++;
-  }
-
-  bool isNeighbourBurning() {
-    return getBurningNeighbourCount() > 0;
   }
 
   void commit() {
@@ -96,8 +91,8 @@ class Plot {
   }
 
   bool isNeighbourOnFire(int nx, int ny) {
-    Plot t = biome["$nx-$ny"];
-    if (t == null) return false;
-    return t.state == PlotState.burning;
+    int width = biome.width - 1;
+    if (nx < 0 || ny < 0 || nx > width || ny > width) return false;
+    return biome.data[nx][ny].state == PlotState.burning;
   }
 }

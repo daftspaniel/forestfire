@@ -1,11 +1,14 @@
 import 'dart:math';
 
-import 'plot.dart';
+import 'grid.dart';
 
 class Forest {
-  final Map<String, Plot> plots = {};
-  final int width = 180;
+
+  Grid land;
+
   final Random rng = new Random();
+
+  get width => land.width;
 
   bool _active = true;
   int _treeChance = 43;
@@ -20,7 +23,8 @@ class Forest {
   }
 
   bool get active => _active;
-  set active(bool val) =>_active = val;
+
+  set active(bool val) => _active = val;
 
   int getTreeChance() => _treeChance;
 
@@ -31,13 +35,16 @@ class Forest {
   }
 
   void reset() {
-    for (int x = 0; x < width; x++)
-      for (int y = 0; y < width; y++)
-        plots["$x-$y"] = new Plot(x, y, plots, getTreeChance, getFireChance);
+    land = new Grid(getTreeChance, getFireChance);
   }
 
   void update() {
-    plots.forEach((k, c) => c.update());
-    plots.forEach((k, c) => c.commit());
+    for (int i = 0; i < land.width; i++)
+      for (int j = 0; j < land.width; j++)
+        land.data[i][j].update();
+
+    for (int i = 0; i < land.width; i++)
+      for (int j = 0; j < land.width; j++)
+        land.data[i][j].commit();
   }
 }

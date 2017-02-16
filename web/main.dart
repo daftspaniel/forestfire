@@ -37,7 +37,7 @@ void update(_) {
   for (int x = 0; x < trees.width; x++)
     for (int y = 0; y < trees.width; y++)
       c2d
-        ..fillStyle = trees.plots["$x-$y"].colour
+        ..fillStyle = trees.land.data[x][y].colour
         ..fillRect(x * drawPlotWidth, y * drawPlotWidth, drawPlotWidth, drawPlotWidth);
 }
 
