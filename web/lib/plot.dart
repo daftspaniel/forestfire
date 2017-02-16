@@ -1,12 +1,13 @@
 import 'dart:math';
 
 final Random rng = new Random();
-enum PlotState { empty, tree, burning }
+enum PlotState { empty, tree, burning, ash }
 
 const String Empty = "rgb(68, 109, 42)";
 const String Tree = "rgb(0,255,0)";
 const String YellowFire = "rgb(255,120,0)";
 const String RedFire = "rgb(255,0,0)";
+const String Ash = "rgb(50,50,50)";
 
 class Plot {
 
@@ -17,22 +18,24 @@ class Plot {
 
   PlotState state = PlotState.empty;
   PlotState nextState = PlotState.empty;
+  int treeAge = 0;
 
   Plot(this.x, this.y,
       this.biome,
       this.getTreeChance,
       this.getFireChance) {
-    if (isNewTree()) state = PlotState.tree;
+    if (isNewTree()) {
+      state = PlotState.tree;
+      treeAge = rng.nextInt(76);
+    }
   }
 
   get colour {
-    if (state == PlotState.tree) return Tree;
+    if (state == PlotState.tree) return "rgb(0,${128 + min(treeAge, 127)},0)";
     if (state == PlotState.empty) return Empty;
+    if (state == PlotState.ash) return Ash;
 
-    if (rng.nextInt(3) == 2)
-      return YellowFire;
-    else
-      return RedFire;
+    return "rgb(${55 + rng.nextInt(200)},${12 + rng.nextInt(123)},0)";
   }
 
   bool isNewTree() {
@@ -45,13 +48,23 @@ class Plot {
 
   void update() {
     if (state == PlotState.burning)
+      nextState = PlotState.ash;
+    else if (state == PlotState.ash)
       nextState = PlotState.empty;
-    else if (state == PlotState.tree && isNeighbourBurning())
+    else if (state == PlotState.tree && rng.nextInt(8)>1 && isNeighbourBurning()) {
       nextState = PlotState.burning;
-    else if (state == PlotState.tree && isCatchingFire())
+      treeAge = 0;
+    }
+    else if (state == PlotState.tree && treeAge > 40 && isCatchingFire()) {
+      treeAge = 0;
       nextState = PlotState.burning;
-    else if (state == PlotState.empty && isNewTree())
+    }
+    else if (state == PlotState.empty && isNewTree()) {
+      treeAge++;
       nextState = PlotState.tree;
+    }
+
+    if (state == PlotState.tree) treeAge++;
   }
 
   bool isNeighbourBurning() {
