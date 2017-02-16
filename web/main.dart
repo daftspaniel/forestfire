@@ -8,30 +8,37 @@ import 'dart:html';
 import 'lib/forest.dart';
 
 const int drawPlotWidth = 2;
+const int minHertz = 1;
+const int maxHertz = 60;
 final CanvasElement ca = querySelector("#surface");
 final CanvasRenderingContext2D c2d = ca.getContext("2d");
 
 final InputElement fireControl = querySelector('#Fire');
 final InputElement treeControl = querySelector('#Tree');
+final InputElement speedControl = querySelector('#Speed');
 final ButtonElement startButton = querySelector('#Start');
 final ButtonElement stopButton = querySelector('#Stop');
 final ButtonElement resetButton = querySelector('#Reset');
 
 final Forest trees = new Forest();
 
+Timer timer;
+
 void main() {
   setupGuiEventHandlers();
 
-  new Timer.periodic(new Duration(milliseconds: 1000), (timer) {
-    if (trees.active)
-      trees.update();
+  timer = new Timer.periodic(new Duration(milliseconds: 1000), update);
+}
 
-    for (int x = 0; x < trees.width; x++)
-      for (int y = 0; y < trees.width; y++)
-        c2d
-          ..fillStyle = trees.plots["$x-$y"].colour
-          ..fillRect(x * drawPlotWidth, y * drawPlotWidth, drawPlotWidth, drawPlotWidth);
-  });
+void update(_) {
+  if (trees.active)
+    trees.update();
+
+  for (int x = 0; x < trees.width; x++)
+    for (int y = 0; y < trees.width; y++)
+      c2d
+        ..fillStyle = trees.plots["$x-$y"].colour
+        ..fillRect(x * drawPlotWidth, y * drawPlotWidth, drawPlotWidth, drawPlotWidth);
 }
 
 void setupGuiEventHandlers() {
@@ -41,6 +48,14 @@ void setupGuiEventHandlers() {
 
   treeControl.onChange.listen((e) {
     trees.treeChance = 101 - treeControl.valueAsNumber.toInt();
+  });
+
+  speedControl.onChange.listen((e) {
+    timer?.cancel();
+    final minDelay = 1000 ~/ maxHertz;
+    final maxDelay = 1000 ~/ minHertz;
+    int delay = minDelay + ((100 - speedControl.valueAsNumber) / 100 * maxDelay).round();
+    timer = new Timer.periodic(new Duration(milliseconds: delay), update);
   });
 
   startButton.onClick.listen((e) {
