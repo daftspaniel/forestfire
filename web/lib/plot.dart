@@ -36,13 +36,13 @@ class Plot {
   get colour {
     if (state == PlotState.tree) return "rgb(0,${110 + min(treeAge, 165)},0)";
     if (state == PlotState.empty) return Empty;
-    if (state == PlotState.water){
-      int v = 128 + min(height*5, 127);
+    if (state == PlotState.water) {
+      int v = 256 - min(height * 5, 127);
       return "rgb(0,0,$v)";
     };
     if (state == PlotState.embers) return YellowFire;
     if (state == PlotState.stone) {
-      int v = 128 + min(height*5, 127);
+      int v = 128 + min(height * 5, 127);
       return "rgb($v,$v,$v)";
     }
 

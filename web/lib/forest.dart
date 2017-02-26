@@ -41,10 +41,10 @@ class Forest {
     print("world created");
     //water
     new FeatureBuilder(
-        land, PlotState.water, 10 + rng.nextInt(4), 6 + rng.nextInt(4));
+        land, PlotState.water, 20 + rng.nextInt(20), 6 + rng.nextInt(6));
     print("water created");
     new FeatureBuilder(
-        land, PlotState.stone, 15 + rng.nextInt(10), 3 + rng.nextInt(4));
+        land, PlotState.stone, 20 + rng.nextInt(20), 6 + rng.nextInt(6));
     print("stone created");
   }
 
