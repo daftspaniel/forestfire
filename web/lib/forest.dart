@@ -1,6 +1,8 @@
 import 'dart:math';
 
+import 'featurebuilder.dart';
 import 'grid.dart';
+import 'plot.dart';
 
 class Forest {
 
@@ -36,6 +38,14 @@ class Forest {
 
   void reset() {
     land = new Grid(getTreeChance, getFireChance);
+    print("world created");
+    //water
+    new FeatureBuilder(
+        land, PlotState.water, 10 + rng.nextInt(4), 6 + rng.nextInt(4));
+    print("water created");
+    new FeatureBuilder(
+        land, PlotState.stone, 15 + rng.nextInt(10), 3 + rng.nextInt(4));
+    print("stone created");
   }
 
   void update() {

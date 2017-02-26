@@ -19,18 +19,21 @@ final InputElement speedControl = querySelector('#Speed');
 final ButtonElement startButton = querySelector('#Start');
 final ButtonElement stopButton = querySelector('#Stop');
 final ButtonElement resetButton = querySelector('#Reset');
+final SpanElement statusDisplay = querySelector('#Status');
 
 final Forest trees = new Forest();
 
 Timer timer;
 
 void main() {
+  statusDisplay.text = "Building world...";
   setupGuiEventHandlers();
 
   timer = new Timer.periodic(new Duration(milliseconds: 1000), update);
 }
 
 void update(_) {
+  statusDisplay.text = "Updating...";
   if (trees.active)
     trees.update();
 
@@ -38,7 +41,9 @@ void update(_) {
     for (int y = 0; y < trees.width; y++)
       c2d
         ..fillStyle = trees.land.data[x][y].colour
-        ..fillRect(x * drawPlotWidth, y * drawPlotWidth, drawPlotWidth, drawPlotWidth);
+        ..fillRect(
+            x * drawPlotWidth, y * drawPlotWidth, drawPlotWidth, drawPlotWidth);
+  statusDisplay.text = "Updated.";
 }
 
 void setupGuiEventHandlers() {
@@ -54,7 +59,8 @@ void setupGuiEventHandlers() {
     timer?.cancel();
     final minDelay = 1000 ~/ maxHertz;
     final maxDelay = 1000 ~/ minHertz;
-    int delay = minDelay + ((100 - speedControl.valueAsNumber) / 100 * maxDelay).round();
+    int delay = minDelay +
+        ((100 - speedControl.valueAsNumber) / 100 * maxDelay).round();
     timer = new Timer.periodic(new Duration(milliseconds: delay), update);
   });
 
@@ -65,6 +71,8 @@ void setupGuiEventHandlers() {
     trees.active = false;
   });
   resetButton.onClick.listen((e) {
+    statusDisplay.text = "Building world...";
     trees.reset();
+    statusDisplay.text = "World built.";
   });
 }
