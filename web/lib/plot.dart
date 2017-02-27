@@ -14,17 +14,17 @@ const String Stone = "rgb(90,90,90)";
 
 class Plot {
 
-  int x, y;
-  Grid biome;
-  Function getFireChance;
-  Function getTreeChance;
+  final int x, y;
+  final Grid biome;
+  final Function getFireChance;
+  final Function getTreeChance;
 
   PlotState state = PlotState.empty;
   PlotState nextState = PlotState.empty;
   int treeAge = 0;
   int height = 0;
 
-  Plot() {}
+  Plot(this.x, this.y, this.getTreeChance, this.getFireChance, this.biome) {}
 
   void init() {
     if (isNewTree()) {

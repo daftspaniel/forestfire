@@ -10,10 +10,7 @@ class FeatureBuilder {
   final int startHeight;
   final int count;
 
-  //int iterations;
-
   FeatureBuilder(this.land, this.state, this.startHeight, this.count) {
-    //iterations = (this.land.width * 0.1).floor();
 
     for (int i = 0; i < count; i++) {
       int spx = _rng.nextInt(land.width);
