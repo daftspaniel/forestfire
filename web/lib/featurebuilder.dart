@@ -11,7 +11,6 @@ class FeatureBuilder {
   final int count;
 
   FeatureBuilder(this.land, this.state, this.startHeight, this.count) {
-
     for (int i = 0; i < count; i++) {
       int spx = _rng.nextInt(land.width);
       int spy = _rng.nextInt(land.width);
@@ -31,13 +30,16 @@ class FeatureBuilder {
 
   void drawPoint(int x, int y, int c) {
     if (x < 0 || y < 0 || x > land.width - 1 || y > land.width - 1) return;
+    if (land.data[x][y].height < c)
+      land.data[x][y].height = c;
 
     land.data[x][y]
-      ..height = c
       ..state = state
       ..nextState = state;
 
+
     if (Vary3()) c--;
+
     if (c > 0) {
       if (Vary2()) drawPoint(x + 1, y - 1, c);
       if (Vary2()) drawPoint(x, y - 1, c);
@@ -54,11 +56,11 @@ class FeatureBuilder {
     }
   }
 
-  bool Vary2() {
-    return _rng.nextInt(7) == 1;
-  }
+  bool Vary2() =>
+      _rng.nextInt(7) == 1;
 
-  bool Vary3() {
-    return _rng.nextInt(20) != 1;
-  }
+
+  bool Vary3() =>
+      _rng.nextInt(19) != 1;
+
 }

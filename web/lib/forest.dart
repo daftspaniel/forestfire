@@ -40,12 +40,20 @@ class Forest {
     land = new Grid(getTreeChance, getFireChance);
     print("world created");
     //water
+    addWater();
+    print("water created");
+    addMountains();
+    print("stone created");
+  }
+
+  void addWater() {
     new FeatureBuilder(
         land, PlotState.water, 20 + rng.nextInt(20), 6 + rng.nextInt(6));
-    print("water created");
+  }
+
+  void addMountains() {
     new FeatureBuilder(
         land, PlotState.stone, 20 + rng.nextInt(20), 6 + rng.nextInt(6));
-    print("stone created");
   }
 
   void update() {

@@ -19,6 +19,8 @@ final InputElement speedControl = querySelector('#Speed');
 final ButtonElement startButton = querySelector('#Start');
 final ButtonElement stopButton = querySelector('#Stop');
 final ButtonElement resetButton = querySelector('#Reset');
+final ButtonElement mountainsButton = querySelector('#Mountains');
+final ButtonElement lochsButton = querySelector('#Lochs');
 final SpanElement statusDisplay = querySelector('#Status');
 
 final Forest trees = new Forest();
@@ -74,5 +76,11 @@ void setupGuiEventHandlers() {
     statusDisplay.text = "Building world...";
     trees.reset();
     statusDisplay.text = "World built.";
+  });
+  mountainsButton.onClick.listen((e) {
+    trees.addMountains();
+  });
+  lochsButton.onClick.listen((e) {
+    trees.addWater();
   });
 }
