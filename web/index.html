@@ -18,40 +18,61 @@
 </head>
 
 <body>
-<div style="width: 500px; text-align: center">
-
-    <p><b>Forest Fire</b> - <span id="Status"></span></p>
-
-
-    <canvas id="surface" width="360" height="360" style="border:2px solid darkolivegreen;border-radius:5px;"></canvas>
-    <span>STATS</span>
-
-    <div>
-
-        <i> Fire Probability LESS</i> <input type="range" min="1" max="99" id="Fire" value="30"/> MORE
-
-        <br/>
-        <br/>
-
-        <i> Tree Probability LESS</i> <input type="range" min="1" max="99" id="Tree" value="43"/> MORE
-
-        <br/>
-        <br/>
-
-        <i> Speed SLOWER</i> <input type="range" min="1" max="100" id="Speed" value="1"/> FASTER
-
-        <br/>
-        <br/>
-
-        <button id="Start">START</button>
-        &nbsp;
-        <button id="Stop">STOP</button>
-        &nbsp;
-        <button id="Reset">RESET</button>
-        <button id="Mountains">Mountains</button>
-        <button id="Lochs">Lochs</button>
-
+<div style="display: inline-flex">
+    <div class="render">
+        <canvas id="surface" width="540" height="540"></canvas>
     </div>
+    <div class="control-panel">
+        <div class="app-title"><b>Forest Fire</b></div>
+        <div>Version 0.3. Written in <a href="http://www.dartlang.org">Dart</a>.</div>
+        <div style="text-align: center">
+            <br/>
+            <br/>
+
+
+            <i> Fire Probability</i>
+            <small>(LESS to MORE)</small>
+            <br/>
+            <input type="range" min="1" max="99" id="Fire" value="30"/>
+
+
+
+            <br/>
+
+            <i> Tree Probability</i>
+            <small>(LESS to MORE)</small>
+
+            <br/>
+            <input type="range" min="1" max="99" id="Tree" value="43"/>
+
+
+            <br/>
+
+            <i> Speed</i>
+            <small>(SLOWER to FASTER)</small>
+
+            <br/>
+            <input type="range" min="1" max="100" id="Speed" value="1"/>
+
+            <br/>
+            <br/>
+
+            <button id="Start">START</button>
+            &nbsp;
+            <button id="Stop">STOP</button>
+            &nbsp;
+            <button id="Reset">RESET</button>
+            <br/>
+            <br/>
+            <button class="wide-button" id="Mountains">+ Mountains</button>
+            <button class="wide-button" id="Lochs">+ Lochs</button>
+            <br/>
+            <br/>
+        </div>
+        <div id="Status" class="status-panel"></div>
+    </div>
+
 </div>
+
 </body>
 </html>

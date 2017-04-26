@@ -48,9 +48,10 @@ class FeatureBuilder {
       if (Vary2()) drawPoint(x - 1, y, c);
       if (Vary2()) drawPoint(x, y, c);
       if (Vary2()) return;
-      if (Vary2()) drawPoint(x + 1, y, c);
 
-      if (Vary2()) drawPoint(x + 1, y + 1, c);
+      if (Vary4()) drawPoint(x + 1, y, c);
+      if (Vary4()) drawPoint(x + 1, y + 1, c);
+
       if (Vary2()) drawPoint(x, y + 1, c);
       if (Vary2()) drawPoint(x - 1, y + 1, c);
     }
@@ -59,8 +60,10 @@ class FeatureBuilder {
   bool Vary2() =>
       _rng.nextInt(7) == 1;
 
-
   bool Vary3() =>
       _rng.nextInt(19) != 1;
+
+  bool Vary4() =>
+      _rng.nextInt(4) == 1;
 
 }

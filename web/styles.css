@@ -10,8 +10,47 @@ html, body {
 }
 
 button {
-    width: 150px;
-    height: 100px;
-    border-radius: 142px;
+    width: 60px;
+    height: 60px;
+    border-radius: 22px;
     border: 0px;
+}
+
+.wide-button {
+    width: 100px;
+    height: 60px;
+    border-radius: 22px;
+    border: 0px;
+}
+
+.status-panel {
+    background-color: beige;
+    height: 100px;
+    overflow-y: scroll;
+    margin-top: 5px;
+}
+
+.slidelabel {
+    text-align: center;
+    width: 80px;
+    display: inline-block;
+}
+
+.control-panel {
+    width: 100%;
+    background-color: cornflowerblue;
+    padding: 5px;
+    border: groove 1px darkgray;
+}
+
+.render {
+    width: 540px;
+    height: 540px;
+    border: groove 1px darkgray;
+    border-radius: 2px;
+}
+
+.app-title {
+    font-size: larger;
+    text-align: center;
 }

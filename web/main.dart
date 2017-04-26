@@ -7,7 +7,7 @@ import 'dart:html';
 
 import 'lib/forest.dart';
 
-const int drawPlotWidth = 2;
+const int drawPlotWidth = 3;
 const int minHertz = 1;
 const int maxHertz = 60;
 final CanvasElement ca = querySelector("#surface");
@@ -21,21 +21,25 @@ final ButtonElement stopButton = querySelector('#Stop');
 final ButtonElement resetButton = querySelector('#Reset');
 final ButtonElement mountainsButton = querySelector('#Mountains');
 final ButtonElement lochsButton = querySelector('#Lochs');
-final SpanElement statusDisplay = querySelector('#Status');
+final DivElement statusDisplay = querySelector('#Status');
 
 final Forest trees = new Forest();
 
 Timer timer;
 
 void main() {
-  statusDisplay.text = "Building world...";
+  addStatus("Building world...");
   setupGuiEventHandlers();
 
   timer = new Timer.periodic(new Duration(milliseconds: 1000), update);
 }
 
+void addStatus(String status) {
+  statusDisplay.text = status;
+}
+
 void update(_) {
-  statusDisplay.text = "Updating...";
+  addStatus("Updating...");
   if (trees.active)
     trees.update();
 
@@ -45,7 +49,7 @@ void update(_) {
         ..fillStyle = trees.land.data[x][y].colour
         ..fillRect(
             x * drawPlotWidth, y * drawPlotWidth, drawPlotWidth, drawPlotWidth);
-  statusDisplay.text = "Updated.";
+  addStatus("Updated.");
 }
 
 void setupGuiEventHandlers() {
@@ -68,19 +72,29 @@ void setupGuiEventHandlers() {
 
   startButton.onClick.listen((e) {
     trees.active = true;
+    addStatus("Started.");
   });
+
   stopButton.onClick.listen((e) {
     trees.active = false;
+    addStatus("Stopped.");
   });
+
   resetButton.onClick.listen((e) {
-    statusDisplay.text = "Building world...";
+    addStatus("Building world...");
     trees.reset();
-    statusDisplay.text = "World built.";
+    addStatus("World built.");
   });
+
   mountainsButton.onClick.listen((e) {
+    addStatus("Building mountains...");
     trees.addMountains();
+    addStatus("Mountains built.");
   });
+
   lochsButton.onClick.listen((e) {
+    addStatus("Building lochs...");
     trees.addWater();
+    addStatus("Lochs built.");
   });
 }
